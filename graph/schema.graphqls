@@ -1,0 +1,74 @@
+scalar Time
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: String!
+  commentsEnabled: Boolean!
+  createdAt: Time!
+  comments(first: Int, after: String): CommentConnection!
+}
+
+type Comment {
+  id: ID!
+  text: String!
+  author: String!
+  parentId: ID
+  postId: ID!
+  createdAt: Time!
+  children(first: Int, after: String): CommentConnection!
+}
+
+type CommentConnection {
+  edges: [CommentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CommentEdge {
+  cursor: String!
+  node: Comment!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type Query {
+  posts(first: Int, after: String): PostConnection!
+  post(id: ID!): Post
+}
+
+type Mutation {
+  createPost(input: CreatePostInput!): Post!
+  updatePostCommentsEnabled(id: ID!, enabled: Boolean!): Post!
+  createComment(input: CreateCommentInput!): Comment!
+}
+
+type Subscription {
+  commentAdded(postId: ID!): Comment!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+  author: String!
+}
+
+input CreateCommentInput {
+  text: String!   # max length 2000
+  author: String!
+  postId: ID!
+  parentId: ID   # optional, если не указан, то корневой
+}
+
+type PostConnection {
+  edges: [PostEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}

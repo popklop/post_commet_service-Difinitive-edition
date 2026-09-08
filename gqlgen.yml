@@ -1,0 +1,26 @@
+schema:
+  - graph/schema.graphqls
+
+exec:
+  filename: graph/generated/generated.go
+  package: generated
+
+model:
+  filename: graph/model/models_gen.go
+  package: model
+
+resolver:
+  layout: follow-schema
+  dir: graph/resolver
+  package: resolver
+  filename_template: "{name}.resolvers.go"
+
+autobind:
+  - "ozon-testovoe/internal/entity/post"
+  - "ozon-testovoe/internal/entity/comment"
+
+models:
+  Post:
+    model: ozon-testovoe/internal/entity/post.Post
+  Comment:
+    model: ozon-testovoe/internal/entity/comment.Comment
